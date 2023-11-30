@@ -133,7 +133,6 @@ internal static class Endpoints
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "Sign in a user and receive a token",
-                Security = null
             })
             .Accepts<UserLoginInformation>("application/json")
             .Produces<string>(StatusCodes.Status200OK)
