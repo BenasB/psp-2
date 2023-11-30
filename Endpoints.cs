@@ -9,7 +9,7 @@ internal static class Endpoints
 
         MapUsersEndpoints(cinematicGroup);
         MapOrdersEndpoints(cinematicGroup);
-        MapAppointmentsEndpoints(cinematicGroup);
+        MapServicesEndpoints(cinematicGroup);
         MapItemsEndpoints(cinematicGroup);
     }
 
@@ -273,15 +273,68 @@ internal static class Endpoints
             .Produces(StatusCodes.Status404NotFound);
     }
 
-    private static void MapAppointmentsEndpoints(RouteGroupBuilder group)
+    private static void MapServicesEndpoints(RouteGroupBuilder group)
     {
-        var appointmentsGroup = group.MapGroup("appointments")
-            .WithTags("Appointments");
+        var servicesGroup = group.MapGroup("services")
+            .WithTags("Services");
 
-        appointmentsGroup.MapGet("", (string companyId) => Results.Ok())
+        servicesGroup.MapGet("", (string companyId) => Results.Ok())
             .WithOpenApi(operation => new(operation)
             {
-                Summary = "List all appointments",
+                Summary = "List all services",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<IEnumerable<Service>>(StatusCodes.Status200OK);
+
+        servicesGroup.MapGet("{serviceId}", (string companyId, string serviceId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific service",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Service>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        servicesGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a service",
+            })
+            .Accepts<ServiceInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Service>(StatusCodes.Status201Created);
+
+        servicesGroup.MapPut("{serviceId}", (string companyId, int serviceId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit a service",
+            })
+            .Accepts<ServiceInformation>("application/json")
+            .Produces<Service>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        servicesGroup.MapDelete("{serviceId}", (string companyId, int serviceId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete a service",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        var appointmentsGroup = group.MapGroup("appointments")
+            .WithTags("Services");
+
+        appointmentsGroup.MapGet("", (string companyId, DateOnly? date) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all appointments with a possibility to show all appointments for a certain day",
             })
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
