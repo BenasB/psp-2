@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// Used to log in the user to gain a token
@@ -76,6 +77,7 @@ record Role : RoleInformation
     public int Id { get; set; }
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 enum Permissions
 {
     UsersRead, UsersManage, RolesRead, RolesManage, LoyaltyRead, LoyaltyManage, OrdersRead, OrdersManage, ServicesRead, ServicesManage, ItemsRead, ItemsManage, InventoryRead, InventoryManage, PaymentsRead, PaymentsManage, StoresRead, StoresManage
