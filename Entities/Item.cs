@@ -58,3 +58,33 @@ record ItemOption : ItemOptionInformation
     [DataType(DataType.Currency)]
     public double Tax { get; set; }
 }
+
+record InventoryInformation
+{
+    /// <example>78</example>
+    [Required]
+    public int Amount { get; set; }
+
+    /// <example>15</example>
+    [Required]
+    public int LowStockThreshold { get; set; }
+}
+
+record InventoryCreationInformation : InventoryInformation
+{
+    /// <example>15</example>
+    [Required]
+    public int ItemId { get; set; }
+
+    /// <example>16</example>
+    [Required]
+    public int StoreId { get; set; }
+}
+
+/// <summary>Represents the amount of a specific item in a specific store</summary>
+record Inventory : InventoryCreationInformation
+{
+    /// <example>684</example>
+    [Required]
+    public int Id { get; set; }
+}
