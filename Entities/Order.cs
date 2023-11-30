@@ -3,14 +3,6 @@ using System.Text.Json.Serialization;
 
 record OrderInformation
 {
-    /// <example>233</example>
-    [Required]
-    public int WorkerId { get; set; }
-
-    /// <example>84354</example>
-    [Required]
-    public int CustomerId { get; set; }
-
     /// <example>3</example>
     [Required]
     public int PaymentMethodId { get; set; }
@@ -18,11 +10,10 @@ record OrderInformation
     /// <example>1.5</example>
     [Required]
     [DataType(DataType.Currency)]
-    public double Gratuitiy { get; set; }
+    public double Gratuity { get; set; }
 
-    /// <example>[15, 21, 11]</example>
     [Required]
-    public IEnumerable<int> Products { get; set; }
+    public IEnumerable<ItemOrder> Products { get; set; }
 
     /// <example>[33]</example>
     [Required]
@@ -34,6 +25,13 @@ record Order : OrderInformation
     /// <example>1024</example>
     [Required]
     public int Id { get; set; }
+
+    /// <example>233</example>
+    public int? WorkerId { get; set; }
+
+    /// <example>84354</example>
+    [Required]
+    public int CustomerId { get; set; }
 
     /// <example>14.58</example>
     [Required]
@@ -57,4 +55,15 @@ record Order : OrderInformation
 enum OrderStatus
 {
     Placed, Pending, Done
+}
+
+class ItemOrder
+{
+    /// <example>15</example>
+    [Required]
+    public int ItemId { get; set; }
+
+    /// <example>1</example>
+    [Required]
+    public int Amount { get; set; }
 }
