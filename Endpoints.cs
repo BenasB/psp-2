@@ -76,6 +76,35 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden);
 
+        ordersGroup.MapDelete("{orderId}", (string companyId, int orderId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete an order",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        ordersGroup.MapPost("{orderId}/orderItems/{itemOrderId}", (string companyId, int orderId, int itemOrderId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Add an additional item order to a specific order. This might be needed if a user wants to add something that they didn't think of when requesting the order initially",
+            })
+            .Accepts<OrderRequest>("application/json")
+            .RequireAuth()
+            .Produces<Order>(StatusCodes.Status201Created);
+
+        ordersGroup.MapDelete("{orderId}/orderItems/{itemOrderId}", (string companyId, int orderId, int itemOrderId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete an item order belonging to a specific order. This might be needed if a user changes up their mind and no longer wants this item order as part of their order.",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
         var itemOrdersGroup = group.MapGroup("itemOrders")
             .WithTags("Orders");
 
@@ -114,16 +143,6 @@ internal static class Endpoints
             })
             .Accepts<int>("application/json")
             .Produces<Order>(StatusCodes.Status200OK)
-            .RequireAuth()
-            .Produces(StatusCodes.Status403Forbidden)
-            .Produces(StatusCodes.Status404NotFound);
-
-        itemOrdersGroup.MapDelete("{itemOrderId}", (string companyId, int itemOrderId) => Results.Ok())
-            .WithOpenApi(operation => new(operation)
-            {
-                Summary = "Delete an item order. This might be needed if a user changes up their mind and no longer wants this item order as part of their order.",
-            })
-            .Produces(StatusCodes.Status204NoContent)
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
