@@ -21,7 +21,7 @@ record AppointmentInformation
 
 record Appointment : AppointmentInformation
 {
-    /// <example>65423</example>
+    /// <example>33</example>
     [Required]
     public int Id { get; set; }
 

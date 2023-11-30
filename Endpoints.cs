@@ -10,6 +10,7 @@ internal static class Endpoints
         MapUsersEndpoints(cinematicGroup);
         MapOrdersEndpoints(cinematicGroup);
         MapAppointmentsEndpoints(cinematicGroup);
+        MapProductsEndpoints(cinematicGroup);
     }
 
     private static void MapOrdersEndpoints(RouteGroupBuilder group)
@@ -213,5 +214,60 @@ internal static class Endpoints
             .Produces(StatusCodes.Status404NotFound)
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden);
+    }
+
+    private static void MapProductsEndpoints(RouteGroupBuilder group)
+    {
+        var productsGroup = group.MapGroup("products")
+            .WithTags("Products");
+
+        productsGroup.MapGet("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all products",
+            })
+            .RequireAuth()
+
+            .Produces<IEnumerable<Item>>(StatusCodes.Status200OK);
+
+        productsGroup.MapGet("{productId}", (string companyId, string productId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific product",
+            })
+            .RequireAuth()
+            .Produces<Item>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        productsGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a product",
+            })
+            .Accepts<ItemInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Item>(StatusCodes.Status201Created);
+
+        productsGroup.MapPut("{productId}", (string companyId, int productId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit a product",
+            })
+            .Accepts<ItemInformation>("application/json")
+            .Produces<Item>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        productsGroup.MapDelete("{productId}", (string companyId, int productId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete a product",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
     }
 }
