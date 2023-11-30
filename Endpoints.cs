@@ -218,6 +218,59 @@ internal static class Endpoints
             })
             .RequireAuth()
             .Produces(StatusCodes.Status200OK);
+
+        var rolesGroup = group.MapGroup("role")
+            .WithTags("Users");
+
+        rolesGroup.MapGet("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all roles",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<IEnumerable<Role>>(StatusCodes.Status200OK);
+
+        rolesGroup.MapGet("{roleId}", (string companyId, string roleId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific role",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Role>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        rolesGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a role",
+            })
+            .Accepts<RoleInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Role>(StatusCodes.Status201Created);
+
+        rolesGroup.MapPut("{roleId}", (string companyId, int roleId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit a role",
+            })
+            .Accepts<RoleInformation>("application/json")
+            .Produces<Role>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        rolesGroup.MapDelete("{roleId}", (string companyId, int roleId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete a role",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
     }
 
     private static void MapAppointmentsEndpoints(RouteGroupBuilder group)
