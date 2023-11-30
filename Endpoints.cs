@@ -486,5 +486,58 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
+
+        var inventoryGroup = group.MapGroup("inventory")
+            .WithTags("Items");
+
+        inventoryGroup.MapGet("", (string companyId, int? item, int? store) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all inventories with a possibility to filter based on the item or the store",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<IEnumerable<Inventory>>(StatusCodes.Status200OK);
+
+        inventoryGroup.MapGet("{inventoryId}", (string companyId, string inventoryId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific inventory",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Inventory>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        inventoryGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create an inventory. When a store wants to sell some item, it must create an inventory (for that store/item pair).",
+            })
+            .Accepts<InventoryCreationInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Inventory>(StatusCodes.Status201Created);
+
+        inventoryGroup.MapPut("{inventoryId}", (string companyId, int inventoryId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit an inventory",
+            })
+            .Accepts<InventoryInformation>("application/json")
+            .Produces<Inventory>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        inventoryGroup.MapDelete("{inventoryId}", (string companyId, int inventoryId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete an inventory",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
     }
 }
