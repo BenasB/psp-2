@@ -9,6 +9,7 @@ internal static class Endpoints
 
         MapUsersEndpoints(cinematicGroup);
         MapOrdersEndpoints(cinematicGroup);
+        MapAppointmentsEndpoints(cinematicGroup);
     }
 
     private static void MapOrdersEndpoints(RouteGroupBuilder group)
@@ -63,7 +64,7 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden);
 
-        ordersGroup.MapPut("{orderId}/assign", (string companyId, int orderId) => Results.Ok())
+        ordersGroup.MapPost("{orderId}/assign", (string companyId, int orderId) => Results.Ok())
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "Assign an employee to an order",
@@ -145,5 +146,72 @@ internal static class Endpoints
             })
             .RequireAuth()
             .Produces(StatusCodes.Status200OK);
+    }
+
+    private static void MapAppointmentsEndpoints(RouteGroupBuilder group)
+    {
+        var appointmentsGroup = group.MapGroup("appointments")
+            .WithTags("Appointments");
+
+        appointmentsGroup.MapGet("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all appointments",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<IEnumerable<Appointment>>(StatusCodes.Status200OK);
+
+        appointmentsGroup.MapGet("{appointmentId}", (string companyId, string appointmentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific appointment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Appointment>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        appointmentsGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create an appointment",
+            })
+            .Accepts<AppointmentInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Appointment>(StatusCodes.Status201Created);
+
+        appointmentsGroup.MapPut("{appointmentId}", (string companyId, int appointmentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit an appointment",
+            })
+            .Accepts<AppointmentInformation>("application/json")
+            .Produces<Appointment>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        appointmentsGroup.MapDelete("{appointmentId}", (string companyId, int appointmentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete an appointment",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        appointmentsGroup.MapPost("{appointmentId}/assign", (string companyId, int appointmentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Assign an employee to an appointment",
+            })
+            .Accepts<int>("application/json")
+            .Produces<Appointment>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden);
     }
 }
