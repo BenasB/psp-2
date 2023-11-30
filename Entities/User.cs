@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
+/// <summary>
+/// Used to log in the user to gain a token
+/// </summary>
 record UserLoginInformation
 {
     /// <example>john.d@gmail.com</example>
@@ -41,4 +44,12 @@ record User : UserInformation
     // <example>2023-11-22T21:06:40.6855801+00:00</example>
     [Required]
     public DateTimeOffset CreateTime { get; set; }
+}
+
+record SignInResponse
+{
+    /// <example>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</example>
+    /// <summary>JWT token (base64 encoded string)</summary>
+    [Required]
+    public string Token { get; set; }
 }
