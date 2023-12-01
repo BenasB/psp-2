@@ -2,13 +2,17 @@ internal static class Endpoints
 {
     public static void MapEndpoints(this WebApplication app)
     {
-        var cinematicGroup = app.MapGroup("cinematic").MapGroup("{companyId}");
+        var cinematicGroup = app.MapGroup("cinematic");
 
-        MapUsersEndpoints(cinematicGroup);
-        MapOrdersEndpoints(cinematicGroup);
-        MapServicesEndpoints(cinematicGroup);
-        MapItemsEndpoints(cinematicGroup);
-        MapStoresEndpoints(cinematicGroup);
+        MapCompanyEndpoints(cinematicGroup);
+
+        var companyGroup = cinematicGroup.MapGroup("{companyId}");
+
+        MapUsersEndpoints(companyGroup);
+        MapOrdersEndpoints(companyGroup);
+        MapServicesEndpoints(companyGroup);
+        MapItemsEndpoints(companyGroup);
+        MapStoresEndpoints(companyGroup);
     }
 
     private static void MapOrdersEndpoints(RouteGroupBuilder group)
@@ -588,6 +592,62 @@ internal static class Endpoints
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "Delete a store",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static void MapCompanyEndpoints(RouteGroupBuilder group)
+    {
+        var companyGroup = group.MapGroup("company")
+            .WithTags("Company");
+
+        companyGroup.MapGet("", () => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all companies",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<IEnumerable<Company>>(StatusCodes.Status200OK);
+
+        companyGroup.MapGet("{companyId}", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific company",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Company>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        companyGroup.MapPost("", () => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a company. This is how the administrator of the PoS system (super-manager) initially onboards a new company.",
+            })
+            .Accepts<CompanyInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Company>(StatusCodes.Status201Created);
+
+        companyGroup.MapPut("{companyId}", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit a company",
+            })
+            .Accepts<CompanyInformation>("application/json")
+            .Produces<Company>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        companyGroup.MapDelete("{companyId}", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete a company. This should have a cascading effect on all of the resources under the deleted company.",
             })
             .Produces(StatusCodes.Status204NoContent)
             .RequireAuth()
