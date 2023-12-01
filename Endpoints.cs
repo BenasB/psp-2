@@ -1,6 +1,3 @@
-
-using Microsoft.OpenApi.Models;
-
 internal static class Endpoints
 {
     public static void MapEndpoints(this WebApplication app)
@@ -11,6 +8,7 @@ internal static class Endpoints
         MapOrdersEndpoints(cinematicGroup);
         MapServicesEndpoints(cinematicGroup);
         MapItemsEndpoints(cinematicGroup);
+        MapStoresEndpoints(cinematicGroup);
     }
 
     private static void MapOrdersEndpoints(RouteGroupBuilder group)
@@ -534,6 +532,62 @@ internal static class Endpoints
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "Delete an inventory",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static void MapStoresEndpoints(RouteGroupBuilder group)
+    {
+        var storesGroup = group.MapGroup("stores")
+            .WithTags("Stores");
+
+        storesGroup.MapGet("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all stores",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<IEnumerable<Store>>(StatusCodes.Status200OK);
+
+        storesGroup.MapGet("{storeId}", (string companyId, string storeId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific store",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Store>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
+
+        storesGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a store",
+            })
+            .Accepts<StoreInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Store>(StatusCodes.Status201Created);
+
+        storesGroup.MapPut("{storeId}", (string companyId, int storeId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Edit a store",
+            })
+            .Accepts<StoreInformation>("application/json")
+            .Produces<Store>(StatusCodes.Status200OK)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+        storesGroup.MapDelete("{storeId}", (string companyId, int storeId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete a store",
             })
             .Produces(StatusCodes.Status204NoContent)
             .RequireAuth()
