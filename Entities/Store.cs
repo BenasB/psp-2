@@ -1,8 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-/// <summary>
-/// Represents a physical store location
-/// </summary>
 record StoreInformation
 {
     /// <example>Mingle In Flavor</example>
@@ -14,6 +11,9 @@ record StoreInformation
     public string Address { get; set; }
 }
 
+/// <summary>
+/// Represents a physical store location
+/// </summary>
 record Store : StoreInformation
 {
     /// <example>18</example>
