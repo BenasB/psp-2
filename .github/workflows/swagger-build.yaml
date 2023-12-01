@@ -10,9 +10,6 @@ on:
 jobs:
   example-one:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ExampleOne
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
