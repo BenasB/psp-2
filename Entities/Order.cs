@@ -88,6 +88,10 @@ record ItemOrderInformation
     [Required]
     public int ItemId { get; set; }
 
+    /// <example>18</example>
+    [Required]
+    public int StoreId { get; set; }
+
     /// <example>[63]</example>
     public IEnumerable<int>? ItemOptions { get; set; }
 }

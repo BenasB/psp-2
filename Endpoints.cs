@@ -20,7 +20,7 @@ internal static class Endpoints
         var ordersGroup = group.MapGroup("orders")
             .WithTags("Orders");
 
-        ordersGroup.MapGet("", (string companyId) => Results.Ok()) // TODO: filtering, sorting, pagination
+        ordersGroup.MapGet("", (string companyId, int? page, int? pageSize, string? sortBy, bool? descending) => Results.Ok())
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "List all orders",
@@ -213,14 +213,6 @@ internal static class Endpoints
             .Produces<SignInResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest);
 
-        usersGroup.MapPost("resetPassword", (string companyId) => Results.Ok())
-            .WithOpenApi(operation => new(operation)
-            {
-                Summary = "Reset the current user's password",
-            })
-            .RequireAuth()
-            .Produces(StatusCodes.Status200OK);
-
         var rolesGroup = group.MapGroup("role")
             .WithTags("Users");
 
@@ -389,7 +381,7 @@ internal static class Endpoints
         var itemsGroup = group.MapGroup("items")
             .WithTags("Items");
 
-        itemsGroup.MapGet("", (string companyId) => Results.Ok())
+        itemsGroup.MapGet("", (string companyId, int? page, int? pageSize, string? sortBy, bool? descending) => Results.Ok())
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "List all items",
