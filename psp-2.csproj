@@ -13,4 +13,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <Target Name="CreateSwaggerJson" AfterTargets="Build" Condition="$(Configuration)=='Debug'">
+    <Exec
+      Command="dotnet swagger tofile --output ./bin/swagger.json $(OutputPath)$(AssemblyName).dll v1"
+      WorkingDirectory="$(ProjectDir)" />
+  </Target>
+
 </Project>
