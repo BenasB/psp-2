@@ -34,7 +34,7 @@ record AppointmentInformation
     [Required]
     public int ServiceId { get; set; }
 
-    /// <example>16</example>
+    /// <example>18</example>
     [Required]
     public int StoreId { get; set; }
 

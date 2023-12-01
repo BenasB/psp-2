@@ -76,12 +76,12 @@ record InventoryCreationInformation : InventoryInformation
     [Required]
     public int ItemId { get; set; }
 
-    /// <example>16</example>
+    /// <example>18</example>
     [Required]
     public int StoreId { get; set; }
 }
 
-/// <summary>Represents the amount of a specific item in a specific store</summary>
+/// <summary>Represents the physical amount of a specific item in a specific store</summary>
 record Inventory : InventoryCreationInformation
 {
     /// <example>684</example>
