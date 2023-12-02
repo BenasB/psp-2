@@ -49,6 +49,10 @@ record User : UserInformation
     // <example>2023-11-22T21:06:40.6855801+00:00</example>
     [Required]
     public DateTimeOffset CreateTime { get; set; }
+
+    /// <example>255</example>
+    [Required]
+    public int LoyaltyPoints { get; set; }
 }
 
 record SignInResponse
