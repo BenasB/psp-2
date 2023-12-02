@@ -323,6 +323,17 @@ internal static class Endpoints
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
 
+        servicesGroup.MapPost("{serviceId}/discounts", (string companyId, int serviceId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a service discount",
+            })
+            .Accepts<ServiceInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<ServiceDiscount>(StatusCodes.Status201Created);
+
         var appointmentsGroup = group.MapGroup("appointments")
             .WithTags("Services");
 
@@ -436,10 +447,11 @@ internal static class Endpoints
             {
                 Summary = "Create an item discount",
             })
-            .Produces(StatusCodes.Status204NoContent)
+            .Accepts<ItemInformation>("application/json")
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<ItemDiscount>(StatusCodes.Status201Created);
 
         var itemOptionsGroup = group.MapGroup("itemOptions")
             .WithTags("Items");
