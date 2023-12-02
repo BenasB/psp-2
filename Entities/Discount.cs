@@ -29,3 +29,11 @@ public record ServiceDiscount : DiscountInformation
     [Required]
     public int ServiceId { get; set; } // Link to the specific item
 }
+
+/// <summary>Holds the discount information directly linked to order</summary>
+public record OrderDiscount : DiscountInformation
+{
+    /// <example>15</example>
+    [Required]
+    public int OrderId { get; set; } // Link to the specific item
+}

@@ -68,6 +68,17 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden);
 
+        ordersGroup.MapPost("{orderId}/discounts", (string companyId, int orderId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create an order discount",
+            })
+            .Accepts<ItemInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<OrderDiscount>(StatusCodes.Status201Created);
+
         ordersGroup.MapPost("{orderId}/assign", (string companyId, int orderId) => Results.Ok())
             .WithOpenApi(operation => new(operation)
             {
