@@ -13,6 +13,7 @@ internal static class Endpoints
         MapServicesEndpoints(companyGroup);
         MapItemsEndpoints(companyGroup);
         MapStoresEndpoints(companyGroup);
+        MapPaymentsEndpoints(companyGroup);
     }
 
     private static void MapOrdersEndpoints(RouteGroupBuilder group)
@@ -66,6 +67,17 @@ internal static class Endpoints
             .Produces(StatusCodes.Status404NotFound)
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden);
+
+        ordersGroup.MapPost("{orderId}/discounts", (string companyId, int orderId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create an order discount",
+            })
+            .Accepts<OrderInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<OrderDiscount>(StatusCodes.Status201Created);
 
         ordersGroup.MapPost("{orderId}/assign", (string companyId, int orderId) => Results.Ok())
             .WithOpenApi(operation => new(operation)
@@ -213,6 +225,92 @@ internal static class Endpoints
             .Produces<SignInResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest);
 
+        usersGroup.MapGet("{userId}/loyalty", (string companyId, int userId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Retrieve available loyalty points",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<int>(StatusCodes.Status200OK);
+
+        usersGroup.MapPut("{userId}/loyalty", (string companyId, int userId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Update user's loyalty points",
+            })
+            .Accepts<int>("application/json") // new loyalty points value
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
+
+        var loyaltyGroup = group.MapGroup("loyalty")
+            .WithTags("Users");
+
+        loyaltyGroup.MapGet("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "List all loyalty offers",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<IEnumerable<LoyaltyOffer>>(StatusCodes.Status200OK);
+
+        loyaltyGroup.MapGet("{offerId}", (string companyId, int offerId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Get a specific loyalty offer",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<LoyaltyOffer>(StatusCodes.Status200OK);
+
+        loyaltyGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a new loyalty offer",
+            })
+            .Accepts<LoyaltyOffer>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<LoyaltyOffer>(StatusCodes.Status201Created);
+
+        loyaltyGroup.MapPut("{offerId}", (string companyId, int offerId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Update a loyalty offer",
+            })
+            .Accepts<LoyaltyOffer>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<LoyaltyOffer>(StatusCodes.Status200OK);
+
+        loyaltyGroup.MapDelete("{offerId}", (string companyId, int offerId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Delete a loyalty offer",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status204NoContent);
+
+        loyaltyGroup.MapPost("{offerId}/redeem", (string companyId, int offerId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Redeem a loyalty offer",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status200OK);
+
         var rolesGroup = group.MapGroup("role")
             .WithTags("Users");
 
@@ -322,6 +420,17 @@ internal static class Endpoints
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
 
+        servicesGroup.MapPost("{serviceId}/discounts", (string companyId, int serviceId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create a service discount",
+            })
+            .Accepts<ServiceInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<ServiceDiscount>(StatusCodes.Status201Created);
+
         var appointmentsGroup = group.MapGroup("appointments")
             .WithTags("Services");
 
@@ -429,6 +538,17 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
+
+        itemsGroup.MapPost("{itemId}/discounts", (string companyId, int itemId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create an item discount",
+            })
+            .Accepts<ItemInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<ItemDiscount>(StatusCodes.Status201Created);
 
         var itemOptionsGroup = group.MapGroup("itemOptions")
             .WithTags("Items");
@@ -645,5 +765,51 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static void MapPaymentsEndpoints(RouteGroupBuilder group)
+    {
+        var paymentsGroup = group.MapGroup("payments")
+            .WithTags("Payments");
+
+        paymentsGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Accept a payment",
+            })
+            .Accepts<PaymentInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Payment>(StatusCodes.Status201Created);
+
+        paymentsGroup.MapGet("{paymentId}/receipts", (string companyId, int paymentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Fetch a receipt for a payment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<Receipt>(StatusCodes.Status200OK);
+
+        paymentsGroup.MapPost("{paymentId}/refunds", (string companyId, int paymentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Process a refund for a payment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<Refund>(StatusCodes.Status201Created);
+
+        paymentsGroup.MapPost("{paymentId}/void", (string companyId, int paymentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Void a payment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<Payment>(StatusCodes.Status200OK);
     }
 }
