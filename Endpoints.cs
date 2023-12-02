@@ -785,7 +785,7 @@ internal static class Endpoints
         paymentsGroup.MapGet("{paymentId}/receipts", (string companyId, int paymentId) => Results.Ok())
             .WithOpenApi(operation => new(operation)
             {
-                Summary = "Generate a receipt for a payment",
+                Summary = "Fetch a receipt for a payment",
             })
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
