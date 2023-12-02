@@ -431,6 +431,16 @@ internal static class Endpoints
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
 
+        itemsGroup.MapPost("{itemId}/discounts", (string companyId, int itemId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Create an item discount",
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
+
         var itemOptionsGroup = group.MapGroup("itemOptions")
             .WithTags("Items");
 
