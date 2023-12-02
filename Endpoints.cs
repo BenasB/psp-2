@@ -13,6 +13,7 @@ internal static class Endpoints
         MapServicesEndpoints(companyGroup);
         MapItemsEndpoints(companyGroup);
         MapStoresEndpoints(companyGroup);
+        MapPaymentsEndpoints(companyGroup);
     }
 
     private static void MapOrdersEndpoints(RouteGroupBuilder group)
@@ -645,5 +646,51 @@ internal static class Endpoints
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static void MapPaymentsEndpoints(RouteGroupBuilder group)
+    {
+        var paymentsGroup = group.MapGroup("payments")
+            .WithTags("Payments");
+
+        paymentsGroup.MapPost("", (string companyId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Accept a payment",
+            })
+            .Accepts<PaymentInformation>("application/json")
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces<Payment>(StatusCodes.Status201Created);
+
+        paymentsGroup.MapGet("{paymentId}/receipts", (string companyId, int paymentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Generate a receipt for a payment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<Receipt>(StatusCodes.Status200OK);
+
+        paymentsGroup.MapPost("{paymentId}/refunds", (string companyId, int paymentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Process a refund for a payment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<Refund>(StatusCodes.Status201Created);
+
+        paymentsGroup.MapPost("{paymentId}/void", (string companyId, int paymentId) => Results.Ok())
+            .WithOpenApi(operation => new(operation)
+            {
+                Summary = "Void a payment",
+            })
+            .RequireAuth()
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<Payment>(StatusCodes.Status200OK);
     }
 }
