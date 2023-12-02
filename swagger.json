@@ -1514,7 +1514,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ItemInformation"
+                "$ref": "#/components/schemas/OrderInformation"
               }
             }
           },
@@ -2048,7 +2048,7 @@
         "tags": [
           "Payments"
         ],
-        "summary": "Generate a receipt for a payment",
+        "summary": "Fetch a receipt for a payment",
         "parameters": [
           {
             "name": "companyId",
