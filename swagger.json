@@ -517,6 +517,71 @@
         ]
       }
     },
+    "/cinematic/{companyId}/items/{itemId}/discounts": {
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Create an item discount",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemInformation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemDiscount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/cinematic/{companyId}/itemOptions": {
       "get": {
         "tags": [
@@ -1418,6 +1483,71 @@
         ]
       }
     },
+    "/cinematic/{companyId}/orders/{orderId}/discounts": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Create an order discount",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemInformation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDiscount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/cinematic/{companyId}/orders/{orderId}/assign": {
       "post": {
         "tags": [
@@ -1861,6 +1991,232 @@
         ]
       }
     },
+    "/cinematic/{companyId}/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Accept a payment",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInformation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/payments/{paymentId}/receipts": {
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Generate a receipt for a payment",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/payments/{paymentId}/refunds": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Process a refund for a payment",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Refund"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/payments/{paymentId}/void": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Void a payment",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/cinematic/{companyId}/services": {
       "get": {
         "tags": [
@@ -2119,6 +2475,71 @@
           },
           "404": {
             "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/services/{serviceId}/discounts": {
+      "post": {
+        "tags": [
+          "Services"
+        ],
+        "summary": "Create a service discount",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serviceId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceInformation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceDiscount"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2987,6 +3408,444 @@
         }
       }
     },
+    "/cinematic/{companyId}/users/{userId}/loyalty": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Retrieve available loyalty points",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update user's loyalty points",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/loyalty": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "List all loyalty offers",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LoyaltyOffer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new loyalty offer",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoyaltyOffer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoyaltyOffer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/loyalty/{offerId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get a specific loyalty offer",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoyaltyOffer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update a loyalty offer",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoyaltyOffer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoyaltyOffer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete a loyalty offer",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/cinematic/{companyId}/loyalty/{offerId}/redeem": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Redeem a loyalty offer",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/cinematic/{companyId}/role": {
       "get": {
         "tags": [
@@ -3523,6 +4382,38 @@
         },
         "additionalProperties": false
       },
+      "ItemDiscount": {
+        "required": [
+          "discountPercentage",
+          "itemId"
+        ],
+        "type": "object",
+        "properties": {
+          "discountPercentage": {
+            "type": "number",
+            "format": "double",
+            "example": 20
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2023-11-22T21:06:40.6855801+00:00"
+          },
+          "conditions": {
+            "type": "string",
+            "nullable": true,
+            "example": "Minimum purchase of $10"
+          },
+          "itemId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 15
+          }
+        },
+        "additionalProperties": false,
+        "description": "Holds the discount information directly linked to item"
+      },
       "ItemInformation": {
         "required": [
           "description",
@@ -3702,6 +4593,39 @@
         ],
         "type": "string"
       },
+      "LoyaltyOffer": {
+        "required": [
+          "description",
+          "offerId",
+          "pointsRequired",
+          "validUntil"
+        ],
+        "type": "object",
+        "properties": {
+          "offerId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 15
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "example": "A free baguette"
+          },
+          "pointsRequired": {
+            "type": "integer",
+            "format": "int32",
+            "example": 550
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-11-22T21:06:40.6855801+00:00"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Holds the information on offers for loyalty programme"
+      },
       "Order": {
         "required": [
           "appointments",
@@ -3790,6 +4714,38 @@
         "additionalProperties": false,
         "description": "Models an existing Order (one that has already been requested)"
       },
+      "OrderDiscount": {
+        "required": [
+          "discountPercentage",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "discountPercentage": {
+            "type": "number",
+            "format": "double",
+            "example": 20
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2023-11-22T21:06:40.6855801+00:00"
+          },
+          "conditions": {
+            "type": "string",
+            "nullable": true,
+            "example": "Minimum purchase of $10"
+          },
+          "orderId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 15
+          }
+        },
+        "additionalProperties": false,
+        "description": "Holds the discount information directly linked to order"
+      },
       "OrderInformation": {
         "required": [
           "appointments",
@@ -3874,6 +4830,86 @@
         ],
         "type": "string"
       },
+      "Payment": {
+        "required": [
+          "amount",
+          "orderID",
+          "paymentDate",
+          "paymentId",
+          "paymentMethod",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          },
+          "amount": {
+            "type": "number",
+            "format": "currency",
+            "example": 15.55
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "paymentId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 10
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-11-21T18:06:40.6433801+00:00"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInformation": {
+        "required": [
+          "amount",
+          "orderID",
+          "paymentMethod"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          },
+          "amount": {
+            "type": "number",
+            "format": "currency",
+            "example": 15.55
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentMethod": {
+        "enum": [
+          "Cash",
+          "CreditCard",
+          "GiftCard"
+        ],
+        "type": "string"
+      },
+      "PaymentStatus": {
+        "enum": [
+          "Completed",
+          "Failed",
+          "Pending"
+        ],
+        "type": "string"
+      },
       "Permissions": {
         "enum": [
           "UsersRead",
@@ -3896,6 +4932,72 @@
           "StoresManage"
         ],
         "type": "string"
+      },
+      "Receipt": {
+        "required": [
+          "dateIssued",
+          "receiptId",
+          "totalAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "receiptId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 5
+          },
+          "dateIssued": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-11-21T18:06:40.6433801+00:00"
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "currency",
+            "example": 21.47
+          }
+        },
+        "additionalProperties": false
+      },
+      "Refund": {
+        "required": [
+          "paymentId",
+          "refundDate",
+          "refundId"
+        ],
+        "type": "object",
+        "properties": {
+          "refundId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 2
+          },
+          "paymentId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 10
+          },
+          "refundDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-11-21T18:06:40.6433801+00:00"
+          },
+          "refundAmount": {
+            "type": "number",
+            "format": "currency",
+            "example": 12
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true,
+            "example": "Bland food"
+          }
+        },
+        "additionalProperties": false
       },
       "Role": {
         "required": [
@@ -4007,6 +5109,38 @@
         },
         "additionalProperties": false
       },
+      "ServiceDiscount": {
+        "required": [
+          "discountPercentage",
+          "serviceId"
+        ],
+        "type": "object",
+        "properties": {
+          "discountPercentage": {
+            "type": "number",
+            "format": "double",
+            "example": 20
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2023-11-22T21:06:40.6855801+00:00"
+          },
+          "conditions": {
+            "type": "string",
+            "nullable": true,
+            "example": "Minimum purchase of $10"
+          },
+          "serviceId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 15
+          }
+        },
+        "additionalProperties": false,
+        "description": "Holds the discount information directly linked to service"
+      },
       "ServiceInformation": {
         "required": [
           "description",
@@ -4103,6 +5237,7 @@
           "firstName",
           "id",
           "lastName",
+          "loyaltyPoints",
           "password",
           "phone",
           "roles"
@@ -4159,6 +5294,11 @@
           "createTime": {
             "type": "string",
             "format": "date-time"
+          },
+          "loyaltyPoints": {
+            "type": "integer",
+            "format": "int32",
+            "example": 255
           }
         },
         "additionalProperties": false
