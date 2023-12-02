@@ -73,7 +73,7 @@ internal static class Endpoints
             {
                 Summary = "Create an order discount",
             })
-            .Accepts<ItemInformation>("application/json")
+            .Accepts<OrderInformation>("application/json")
             .RequireAuth()
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
